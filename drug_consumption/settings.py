@@ -7,7 +7,7 @@ def set_root_dir():
     if os.getcwd()[-33:] != 'drug-consumption/drug_consumption':
         print('Appending project directory to the current working directory')
         PROJ_ROOT_DIR = os.path.join(os.getcwd(), "drug_consumption")
-        print(os.getcwd())
+        print(PROJ_ROOT_DIR)
     else:
         PROJ_ROOT_DIR = os.getcwd()
 
@@ -22,3 +22,5 @@ def make_proj_module(project_directory=PROJ_ROOT_DIR):
     else:
         print("Python is already checking for modules in this directory")
 
+if __name__ == '__main__':
+    make_proj_module()

@@ -2,7 +2,7 @@ import os
 import sys
 import pandas as pd
 from urllib.request import urlretrieve
-from settings import *
+from drug_consumption.settings import *
 
 DATA_PATH = os.path.join(PROJ_ROOT_DIR, "data")
 DATA_DOWNLOAD_ROOT = "https://archive.ics.uci.edu/ml/machine-learning-databases/00373/"
@@ -24,9 +24,5 @@ def load_drug_data():
     return drug_df
 
 
-
-
-
-make_proj_module()
 import_drug_data()
 drug_df = load_drug_data()
