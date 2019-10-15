@@ -135,20 +135,4 @@ mush_df = drug_df_clean.loc[:,[
     'Mushroom']]
 
 
-canna_df = drug_df_clean.loc[:,[
-    'ID',
-    'Age',
-    'Gender',
-    'Education',
-    'Country', 
-    'Ethnicity',
-    'Nscore',
-    'Escore',
-    'Oscore',
-    'Ascore',
-    'Cscore',
-    'ImpulsiveScore',
-    'SS',
-    'Cannabis']]
-
 
