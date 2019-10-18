@@ -1,6 +1,6 @@
-from drug_consumption.predict_canna_logreg import logreg_pipe
-from drug_consumption.predict_canna_rf import rf_pipe
-from drug_consumption.predict_canna_SVC import svc_pipe
+from drug_consumption.models.logreg import logreg_pipe
+from drug_consumption.models.rf import rf_pipe
+from drug_consumption.models.svc import svc_pipe
 from drug_consumption.prepare_data import X_train, y_train, X_test, y_test
 
 from sklearn.compose import ColumnTransformer
@@ -11,7 +11,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
-
 
 
 from sklearn.metrics import make_scorer, roc_auc_score, accuracy_score, roc_curve, confusion_matrix, classification_report
@@ -34,7 +33,7 @@ param_grid = [
     {'classifier': [LogisticRegression(solver='liblinear')], 
     'classifier__C': [0.001, 0.01, 1, 100],
     'classifier__penalty': ["l1", "l2"]},
-    {'classifier': [LogisticRegression(solver='lbfgs', penalty="l2", max_iter=300)], 
+    {'classifier': [LogisticRegression(solver='lbfgs', penalty="l2", max_iter=400)], 
     'classifier__C': [0.001, 0.01, 1, 100]},
     {'classifier': [RandomForestClassifier(n_estimators=200, random_state=2)],
     'classifier__max_depth': [15, 25, 35],
@@ -59,15 +58,6 @@ print("Test set roc-auc for SVC: {:.2f}".format(roc_auc_score(y_test, clf_grid.d
 print("Test set accuracy score for SVC: {:.2f}".format(accuracy_score(y_test, clf_grid.predict(X_test))))
 
 
-
-
-# Because 64% of responses are in class 1, there would be a baseline accuracy of 0.64 if we predicted all responses to be class 1
-# Because this data is slightly imbalanced, ROC-AUC may be a better evaluation metric than accuracy.  
-# Area under the ROC curve shows the probability that a value of the positive class will have a higher score than one of the negative class according to the decision function of the model
-
-
-
-# All the models are pretty similar but Logistic Regression seems to be the best
 
 # Print the classification report for all three models to see if that gives any further information about which model is best
 model_list = {'Logistic Regression': logreg_pipe, 

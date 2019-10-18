@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from drug_consumption.wrapper import grid_search_wrapper
+from drug_consumption.models.wrapper import grid_search_wrapper
 
 
 # Make the preprocessor 
@@ -18,33 +18,18 @@ ct = ColumnTransformer([
      ("cat", OneHotEncoder(handle_unknown = 'ignore', sparse=False), ['Gender', 'Education', 'Country', 'Ethnicity'])], 
      remainder='passthrough')
 
-
+# Make the pipeline
 pipe = Pipeline([
     ("preparation", ct),
     ("svc", SVC())
 ])
 
 
-# Make list of scorers to evaluate predictions
-scorers = {
-    'roc_auc' : make_scorer(roc_auc_score),
-    'precision_score' : make_scorer(precision_score),
-    'accuracy' : make_scorer(accuracy_score)
-}
+# First try
 
-
-if __name__ == "__main__":
-    # Make parameter grid for grid search 
-
-    param_grid = [
-        {'kernel': ['rbf'], 'C': [0.001, 0.01, 0.1, 1, 10, 100], 'gamma': [0.001, 0.01, 0.1, 1, 10, 100]}, 
-        {'kernel': ['linear'], 'C': [0.001, 0.01, 0.1, 1, 10, 100]}]
-    
-    print("parameter grid:\n{}".format(param_grid), "\n\nscorers to evaluate predictions on test set:\n{}".format(list(scorers.keys())))
-
-    grid_search, results = grid_search_wrapper(param_grid, scorers, refit_score='roc_auc')
-    grid_search, results = grid_search_wrapper(param_grid, scorers, refit_score='accuracy')
-
+# param_grid = [
+#     {'svc__kernel': ['rbf'], 'svc__C': [0.001, 0.01, 0.1, 1, 10, 100], 'svc__gamma': [0.001, 0.01, 0.1, 1, 10, 100]}, 
+#     {'svc__kernel': ['linear'], 'svc__C': [0.001, 0.01, 0.1, 1, 10, 100]}]
 
 
 # Because the largest scores are near the endge of the heat map, we'll adjust the parameter grid to see if better scores are beyong the search space of the last grid search
@@ -57,3 +42,4 @@ grid_search, svc_results = grid_search_wrapper(X_train, y_train, pipe, param_gri
 # But the best parameters are the same as the ones we found in the first grid search
 
 svc_pipe = grid_search.best_estimator_
+

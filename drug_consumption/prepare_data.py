@@ -6,11 +6,11 @@ import seaborn as sns
 
 # Prepare the data for machine learning
 
-
 def make_single_drug_df(df_full, drug):
 
     """
-    A function to select a single drug as the target variable, process age variable, and isolate features dataset
+    A function to select a single drug as the target variable, process age variable, 
+    and isolate features dataset
 
     Arguments: 
     df_full = the full drug pandas Dataframe
@@ -42,22 +42,22 @@ def make_single_drug_df(df_full, drug):
 
     return returns
 
-canna_df, canna_features = make_single_drug_df(df_full=drug_df_clean, drug='Cannabis')   
 
-
+drug = 'Cannabis'
+df, features = make_single_drug_df(df_full=drug_df_clean, drug= drug)   
 
 
 if __name__ == '__main__':
-    print("Shape of Cannabis data:", canna_df.shape)
+    print("Shape of", drug, "data:", df.shape)
 
     print("Counts per response:\n", {
-        n: v for n, v in zip(canna_df.Cannabis.value_counts().index, canna_df.Cannabis.value_counts())
+        n: v for n, v in zip(df[drug].value_counts().index, df[drug].value_counts())
     }, "\nProportion each response:\n", {
-        n: v for n, v in zip(canna_df.Cannabis.value_counts().index, canna_df.Cannabis.value_counts() / len(canna_df))
+        n: v for n, v in zip(df[drug].value_counts().index, df[drug].value_counts() / len(df))
     })
 
     # Look at the distribution of the numerical variables
-    canna_df.drop(columns=['ID', 'Cannabis']).hist(bins=50, figsize=(20,15))
+    df.drop(columns=['ID', drug]).hist(bins=50, figsize=(20,15))
     # They are largely normally distributed
 
 
@@ -66,17 +66,17 @@ if __name__ == '__main__':
     col_list = ['Age', 'Gender', 'Education', 'Country', 'Education', 'Ethnicity']
     for feature in col_list:
         print("Counts per response:\n", {
-                n: v for n, v in zip(canna_df.loc[:,feature].value_counts().index, canna_df.loc[:, feature].value_counts())
+                n: v for n, v in zip(df.loc[:,feature].value_counts().index, df.loc[:, feature].value_counts())
             })
 
     # Pairplot of numerical features
-    sns.pairplot(canna_df, height = 4, vars=[
+    sns.pairplot(df, height = 4, vars=[
         'Nscore', 'Escore', 'Oscore', 
         'Ascore', 'Cscore', 'ImpulsiveScore', 'SS'], )
 
 
 # Split into train and test sets 
-X_train, X_test, y_train, y_test = train_test_split(canna_features, canna_df.Cannabis, random_state= 42)
+X_train, X_test, y_train, y_test = train_test_split(features, df[drug], random_state= 42)
 
 
 

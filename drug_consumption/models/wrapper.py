@@ -2,13 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import make_scorer, average_precision_score,precision_score, roc_auc_score, accuracy_score
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
 import seaborn as sns
 import matplotlib.pyplot as plt
-
-
 
 
 # Wrapper to fit GridSearchCV optimized with different scores:
@@ -25,7 +20,7 @@ def grid_search_wrapper(X_train, y_train, pipe, param_grid, refit_score):
 
     Returns: tuple of GridSearchCV (for using for predictions) and results pandas DataFrame for evaluating the model
     """
-    # Create scorers
+    # Scores to report in the results 
     scorers = {
         'roc_auc' : make_scorer(roc_auc_score),
         'precision_score' : make_scorer(precision_score),
