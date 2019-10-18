@@ -1,9 +1,8 @@
 from drug_consumption.clean_data import drug_df_clean
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.compose import make_column_transformer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Prepare the data for machine learning
 
@@ -47,6 +46,7 @@ canna_df, canna_features = make_single_drug_df(df_full=drug_df_clean, drug='Cann
 
 
 
+
 if __name__ == '__main__':
     print("Shape of Cannabis data:", canna_df.shape)
 
@@ -56,18 +56,28 @@ if __name__ == '__main__':
         n: v for n, v in zip(canna_df.Cannabis.value_counts().index, canna_df.Cannabis.value_counts() / len(canna_df))
     })
 
+    # Look at the distribution of the numerical variables
+    canna_df.drop(columns=['ID', 'Cannabis']).hist(bins=50, figsize=(20,15))
+    # They are largely normally distributed
+
+
+    # Value counts for the categorical variables
+
+    col_list = ['Age', 'Gender', 'Education', 'Country', 'Education', 'Ethnicity']
+    for feature in col_list:
+        print("Counts per response:\n", {
+                n: v for n, v in zip(canna_df.loc[:,feature].value_counts().index, canna_df.loc[:, feature].value_counts())
+            })
+
+    # Pairplot of numerical features
+    sns.pairplot(canna_df, height = 4, vars=[
+        'Nscore', 'Escore', 'Oscore', 
+        'Ascore', 'Cscore', 'ImpulsiveScore', 'SS'], )
+
 
 # Split into train and test sets 
 X_train, X_test, y_train, y_test = train_test_split(canna_features, canna_df.Cannabis, random_state= 42)
 
-ct = make_column_transformer(
-    (StandardScaler(), ['Upper_Age', 'Lower_Age']), 
-     (OneHotEncoder(sparse=False), ['Gender', 'Education', 'Country', 'Ethnicity']), 
-     remainder='passthrough')
-    
-ct.fit(X_train)
-X_train_trans=ct.transform(X_train)
-X_test_trans=ct.transform(X_test)
 
 
 # Because 64% of responses are in class 1, there would be a baseline accuracy of 0.64 if we predicted all responses to be class 1
