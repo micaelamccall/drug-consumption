@@ -42,3 +42,4 @@ grid_search, logreg_results = grid_search_wrapper(X_train, y_train, pipe, param_
 logreg_pipe = grid_search.best_estimator_  # The full pipeline
 logreg_pipe.named_steps['logreg']  # The LogisticRegression model
 
+
