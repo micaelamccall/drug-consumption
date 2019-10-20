@@ -5,7 +5,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import make_scorer, average_precision_score,precision_score, roc_auc_score, accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 
-from sklearn.compose import ColumnTransformer
+
 from sklearn.pipeline import Pipeline
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -47,15 +47,11 @@ grid_search, rf_results = grid_search_wrapper(X_train, y_train, pipe, param_grid
 # Store classifier for later comparison with others
 rf_pipe = grid_search.best_estimator_
 
+rf = rf_pipe.named_steps['rf']
+
 
 
 # Plot features importances according to Random Forest
 # Having trouble with this because the column transformer doesnt name columns
-
-# feature_importances = pd.DataFrame(rf.feature_importances_, index=canna_features.columns, columns=['importance']).sort_values('importance', ascending=False)
-
-# def plot_rf_feature_importance():
-#     n_features = canna_features.shape[1]
-#     plt.barh(np.arange(n_features), rf.feature_importances_, align='center')
 
 

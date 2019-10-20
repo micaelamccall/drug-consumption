@@ -36,7 +36,7 @@ def make_single_drug_df(df_full, drug):
     df.Upper_Age=df.Upper_Age.astype('float')
 
     # Make dataframe of features
-    features=df.drop(['ID','Age', drug], axis = 1)
+    features=df.drop(['ID','Age', drug], axis = 1).reset_index()
 
     returns = (df, features)
 
@@ -47,37 +47,8 @@ drug = 'Cannabis'
 df, features = make_single_drug_df(df_full=drug_df_clean, drug= drug)   
 
 
-if __name__ == '__main__':
-    print("Shape of", drug, "data:", df.shape)
-
-    print("Counts per response:\n", {
-        n: v for n, v in zip(df[drug].value_counts().index, df[drug].value_counts())
-    }, "\nProportion each response:\n", {
-        n: v for n, v in zip(df[drug].value_counts().index, df[drug].value_counts() / len(df))
-    })
-
-    # Look at the distribution of the numerical variables
-    df.drop(columns=['ID', drug]).hist(bins=50, figsize=(20,15))
-    # They are largely normally distributed
-
-
-    # Value counts for the categorical variables
-
-    col_list = ['Age', 'Gender', 'Education', 'Country', 'Education', 'Ethnicity']
-    for feature in col_list:
-        print("Counts per response:\n", {
-                n: v for n, v in zip(df.loc[:,feature].value_counts().index, df.loc[:, feature].value_counts())
-            })
-
-    # Pairplot of numerical features
-    sns.pairplot(df, height = 4, vars=[
-        'Nscore', 'Escore', 'Oscore', 
-        'Ascore', 'Cscore', 'ImpulsiveScore', 'SS'], )
-
-
 # Split into train and test sets 
 X_train, X_test, y_train, y_test = train_test_split(features, df[drug], random_state= 42)
-
 
 
 # Because 64% of responses are in class 1, there would be a baseline accuracy of 0.64 if we predicted all responses to be class 1

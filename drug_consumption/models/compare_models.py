@@ -57,6 +57,8 @@ print("Best cross-val score: {:.2f}".format(clf_grid.best_score_))
 print("Test set roc-auc for SVC: {:.2f}".format(roc_auc_score(y_test, clf_grid.decision_function(X_test))))
 print("Test set accuracy score for SVC: {:.2f}".format(accuracy_score(y_test, clf_grid.predict(X_test))))
 
+final_pipe = clf_grid.best_estimator_
+final_model = final_pipe.named_steps['classifier']
 
 
 # Print the classification report for all three models to see if that gives any further information about which model is best
