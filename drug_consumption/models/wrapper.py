@@ -15,12 +15,13 @@ def grid_search_wrapper(X_train, y_train, pipe, param_grid, refit_score):
     X_train = training features
     y_train training target
     pipe = a pipline object that include preprocessing steps and chosen classifier
-    param_grid = a dict with keys as strings of the parameter names and values are a list of possible values for the parameter
+    param_grid = a dict or list of dicts with keys as strings of the 
+    parameter names and values are a list of possible values for the parameter
     refit_score = string naming the score to refit by
 
     Returns: tuple of GridSearchCV (for using for predictions) and results pandas DataFrame for evaluating the model
     """
-    # Scores to report in the results 
+    # Scores to report in the results
     scorers = {
         'roc_auc' : make_scorer(roc_auc_score),
         'precision_score' : make_scorer(precision_score),
@@ -28,43 +29,52 @@ def grid_search_wrapper(X_train, y_train, pipe, param_grid, refit_score):
     }
 
     # Create a GridSearchCV instance optimized for refit_score 
-    # Usually good to set n_estimators (the number of trees to build) to as high as is feasible
     grid_search = GridSearchCV(pipe, param_grid, scoring=scorers, refit=refit_score, cv=5, return_train_score=True, n_jobs=-1)
 
     # Fit on training data
     grid_search.fit(X_train,y_train)
 
-    # Store results of each cross val of the best kernel
+    # Store results of each cross val
     results = pd.DataFrame(grid_search.cv_results_)
 
     # Make a list of the parameters to extract from results
     subset_results=['mean_test_precision_score', 'mean_test_roc_auc', 'mean_test_accuracy']
+    
+    # Initialize list of params and list of parameter dimensions for graphing
     params = []
     dim = []
 
+    # SVC has a 'list' type parameter grid (two kernels)
+    # this extracts the best kernel if the classifier used is SVC
+    # SVC must be named 'svc' for this to work
     if 'svc__kernel' in grid_search.best_params_:
         best_kernel = grid_search.best_params_['svc__kernel']
     
-
+    # add params to subset_results. If the classifier is SVC, only add the params for the best kernel
     if type(param_grid) == list:
         for grid in param_grid:
             if grid['svc__kernel']==[best_kernel]:
                 for param in grid.keys():
+                    # Save length of the param for the dimensions of the graph
                     dim.append(len(grid[param]))
 
                     # Save param for graphing later
                     if param not in params:
                         params.append(param)
+                # take out dimension of kernel 
                 dim = dim[1:]
-            for param in grid.keys():
-                # Save param for graphing later
-                if param not in params:
-                    params.append(param)
-            params=params[1:]
-            # Add the param to the list of column names in results
+            else:
+                for param in grid.keys():
+                    # Save param for graphing later
+                    if param not in params:
+                        params.append(param)
+        # Take out kernel param
+        params=params[1:]
+        # Add the param to the list of column names in results
+        for param in params:
             param_str='param_'+str(param)
-            if param_str not in subset_results:
-                subset_results.append(param_str)
+        if param_str not in subset_results:
+            subset_results.append(param_str)
         # Selected results
         results= results[results.param_svc__kernel==best_kernel].loc[:,subset_results].round(3).reindex()  
     else:

@@ -4,7 +4,7 @@
 
 # Intro
 
-One of the first things that fascinated me about machine learning is the ability to predict the behavior of individuals. There are many uses for this capability, from predicting the liklihood of an individual to click on an add, to recommending follow-up mental health treatment based on risk of self-harm. 
+One of the first things that fascinated me about machine learning is the ability to predict the behavior of individuals. There are many uses for this capability, from predicting the liklihood of an individual to click on an ad, to recommending follow-up mental health treatment based on risk of self-harm. 
 
 ## Dataset
 
@@ -42,7 +42,6 @@ Clone this repo to view project scripts and Jupyter nb are in the `drug_consumpt
 Based on test-set accuracy (0.76) and ROC AUC (0.81), I found that the SVC model performed better than other models in predicting whether or not an individaul had used cannabis. 
 
 # Next 
-
 
 The dataset includes a multi-class response for each drug. If the target was binarized differently (perhaps including all people who had used the drug once in the negative class), would the model perform better? I.e. is the binarization I chose the best one to reflect human personality factors and behavior? What about if the problem was treated as a multi-class classification problem? 
 
