@@ -24,6 +24,7 @@ In this project, I explored the ability of three supervised learning algorithms 
 Clone this repo to view project scripts and Jupyter nb are in the `drug_consumption` directory
 
 - `drug_consumption.ipynb` contains all the code for the project and comments
+- `biof509_final_presentation.ipynb` is the presentation for my final project for class
 
 - Project scripts
     - `settings.py` sets the root directory of the project and makes the project a module
